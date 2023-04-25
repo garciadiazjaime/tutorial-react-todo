@@ -15,9 +15,16 @@ function HomePage() {
       return;
     }
 
-    const newList = [...list, todo];
+    const newList = [...list, { todo, state: false }];
     setList(newList);
     setTodo("");
+  };
+
+  const onTodoChangeHandler = (index) => {
+    const newList = [...list];
+
+    newList[index].state = !newList[index].state;
+    setList(newList);
   };
 
   return (
@@ -50,6 +57,23 @@ function HomePage() {
       >
         Add
       </button>
+
+      <ul style={{ margin: 0, listStyle: "none", padding: 0, fontSize: 48 }}>
+        {list.map((item, index) => (
+          <li
+            key={index}
+            style={{ display: "flex", alignItems: "center", margin: "12px 0" }}
+          >
+            <input
+              type="checkbox"
+              checked={item.state}
+              onChange={() => onTodoChangeHandler(index)}
+              style={{ width: 48, height: 48, marginRight: 12 }}
+            />
+            <span>{item.todo}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
