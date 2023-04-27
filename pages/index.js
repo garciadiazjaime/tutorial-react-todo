@@ -1,23 +1,40 @@
 // pages/index.js
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function HomePage() {
   const [todo, setTodo] = useState("");
   const [list, setList] = useState([]);
+  const [editIndex, setEditIndex] = useState();
+  const [editModeOn, setEditModeIn] = useState(false);
+  const inputRef = useRef();
 
   const onChangeHandler = (event) => {
     setTodo(event.target.value);
   };
 
-  const addClickHandler = () => {
+  const saveClickHandler = () => {
     if (!todo) {
       return;
     }
 
-    const newList = [...list, { todo, state: false }];
+    const newList = [...list];
+
+    if (editModeOn) {
+      newList[editIndex].todo = todo;
+      setEditIndex();
+    } else {
+      newList.push({ todo, state: false });
+    }
+
     setList(newList);
     setTodo("");
+  };
+
+  const onKeyDownHandler = (event) => {
+    if (event.key === "Enter") {
+      saveClickHandler();
+    }
   };
 
   const onTodoChangeHandler = (index) => {
@@ -27,12 +44,33 @@ function HomePage() {
     setList(newList);
   };
 
+  const editClickHandler = (index) => {
+    if (editModeOn) {
+      setTodo("");
+      setEditIndex();
+    } else {
+      inputRef.current.focus();
+      setEditIndex(index);
+      setTodo(list[index].todo);
+    }
+  };
+
+  useEffect(() => {
+    setEditModeIn(editIndex >= 0);
+  }, [editIndex]);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   return (
     <div>
       <input
         type="text"
         value={todo}
         onChange={onChangeHandler}
+        onKeyDown={onKeyDownHandler}
+        ref={inputRef}
         style={{
           border: "none",
           borderBottom: "1px solid black",
@@ -44,25 +82,18 @@ function HomePage() {
         }}
       />
 
-      <button
-        onClick={addClickHandler}
-        style={{
-          margin: "12px 0",
-          padding: "12px 0",
-          fontSize: 20,
-          width: "100%",
-          background: "none",
-          border: "1px solid black",
-        }}
-      >
-        Add
-      </button>
-
-      <ul style={{ margin: 0, listStyle: "none", padding: 0, fontSize: 48 }}>
+      <ul style={{ margin: "24px 0 0", listStyle: "none", padding: 0 }}>
         {list.map((item, index) => (
           <li
             key={index}
-            style={{ display: "flex", alignItems: "center", margin: "12px 0" }}
+            style={{
+              margin: "12px 0",
+              display: "flex",
+              alignItems: "center",
+              height: '100%',
+              width: "100%",
+              height: 48
+            }}
           >
             <input
               type="checkbox"
@@ -70,7 +101,19 @@ function HomePage() {
               onChange={() => onTodoChangeHandler(index)}
               style={{ width: 48, height: 48, marginRight: 12 }}
             />
-            <span>{item.todo}</span>
+            <div
+              style={{
+                fontSize: editIndex === index ? 30 : 24,
+                color: editIndex === index ? "gray" : "initial",
+                flex: 1,
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+              }}
+              onClick={() => editClickHandler(index)}
+            >
+              {item.todo}
+            </div>
           </li>
         ))}
       </ul>
