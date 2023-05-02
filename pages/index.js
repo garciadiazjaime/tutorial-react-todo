@@ -55,6 +55,23 @@ function HomePage() {
     }
   };
 
+  const deleteClickHandler = (event, index) => {
+    event.stopPropagation();
+    if (!confirm("Are you sure?")) {
+      return;
+    }
+
+    const newList = [...list];
+
+    if (index === 0) {
+      setList(newList.slice(1));
+    } else {
+      setList([...newList.slice(0, index), ...newList.slice(index + 1)]);
+    }
+    setEditIndex();
+    setTodo("");
+  };
+
   useEffect(() => {
     setEditModeIn(editIndex >= 0);
   }, [editIndex]);
@@ -90,9 +107,9 @@ function HomePage() {
               margin: "12px 0",
               display: "flex",
               alignItems: "center",
-              height: '100%',
+              height: "100%",
               width: "100%",
-              height: 48
+              height: 48,
             }}
           >
             <input
@@ -109,10 +126,29 @@ function HomePage() {
                 height: "100%",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "space-between",
               }}
               onClick={() => editClickHandler(index)}
             >
-              {item.todo}
+              <div>{item.todo}</div>
+              {index === editIndex ? (
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "1px solid red",
+                    opacity: 0.7,
+                  }}
+                  onClick={(event) => deleteClickHandler(event, index)}
+                >
+                  ❌
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </li>
         ))}
