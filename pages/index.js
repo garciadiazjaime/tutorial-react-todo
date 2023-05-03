@@ -4,10 +4,29 @@ import { useState, useEffect, useRef } from "react";
 
 function HomePage() {
   const [todo, setTodo] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setListState] = useState([]);
   const [editIndex, setEditIndex] = useState();
   const [editModeOn, setEditModeIn] = useState(false);
   const inputRef = useRef();
+
+  const setList = (list) => {
+    localStorage.setItem("@app.List", JSON.stringify(list));
+    setListState(list);
+  };
+
+  const initList = () => {
+    let localList = [];
+
+    try {
+      localList = JSON.parse(localStorage.getItem("@app.List"));
+    } catch (error) {
+      // no-op
+    }
+
+    if (Array.isArray(localList)) {
+      setList(localList);
+    }
+  };
 
   const onChangeHandler = (event) => {
     setTodo(event.target.value);
@@ -78,6 +97,8 @@ function HomePage() {
 
   useEffect(() => {
     inputRef.current.focus();
+
+    initList();
   }, []);
 
   return (
