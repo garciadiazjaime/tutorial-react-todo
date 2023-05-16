@@ -68,7 +68,6 @@ function HomePage() {
             <input
               type="text"
               value={item.todo}
-              readOnly
               style={{
                 height: 48,
                 width: "100%",
