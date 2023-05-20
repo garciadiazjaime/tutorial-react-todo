@@ -103,7 +103,11 @@ function HomePage() {
         {list.map((item, index) => (
           <li
             key={index}
-            style={{ display: "flex", alignItems: "center", margin: "12px 0" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              margin: "12px 0",
+            }}
           >
             <input
               type="checkbox"
@@ -111,7 +115,7 @@ function HomePage() {
               onChange={() => onTodoChangeHandler(index)}
               style={{ width: 48, height: 48, marginRight: 12 }}
             />
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative", width: "100%" }}>
               <input
                 type="text"
                 value={item.todo}
