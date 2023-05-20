@@ -88,7 +88,7 @@ function HomePage() {
               style={{ width: 48, height: 48, marginRight: 12 }}
             />
             {/* BEGINNING OF NEW CODE */}
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative", width: "100%" }}>
               <input
                 type="text"
                 value={item.todo}
